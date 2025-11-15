@@ -1,7 +1,7 @@
 # Compiler and flags
 CC := gcc
-CFLAGS := -Wall -Wextra -std=c11 $(shell pkg-config --cflags sdl2)
-LDFLAGS := $(shell pkg-config --libs sdl2)
+CFLAGS := -Wall -Wextra -std=c11 -I/usr/local/include $(shell pkg-config --cflags sdl2)
+LDFLAGS := $(shell pkg-config --libs sdl2) -L/usr/local/lib -lfcmath -lm
 
 # Directories
 SRC_DIR := src

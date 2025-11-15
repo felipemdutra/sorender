@@ -10,7 +10,10 @@
 #define WIN_WIDTH 800
 #define WIN_HEIGHT 600
 
+#include "render/render_context.h"
 #include "render/pixel_buffer.h"
+#include "render/triangle.h"
+#include "render/vertex.h"
 
 int main(void)
 {
@@ -27,16 +30,51 @@ int main(void)
 
         SDL_Surface *surface = SDL_GetWindowSurface(window);
         SDL_PixelFormat *surface_fmt = surface->format;
-
         PixelBuffer *pixelbuf = malloc(sizeof(PixelBuffer));
+        if (!pixelbuf) {
+                fprintf(stderr, "ERROR: failed to allocate memory\n"); 
+                return 1;
+        }
+
+        Context ctx = {
+                .pixelbuf = pixelbuf,
+                .surface = surface,
+                .window = window,
+                .pixel_fmt = surface_fmt,
+                .width = WIN_WIDTH,
+                .height = WIN_HEIGHT
+        };
 
         bool is_running = true; 
+        Vertex a = {
+                .x = 100,
+                .y = 100,
+                .r = 0,
+                .g = 0,
+                .b = 255 
+        };
+
+        Vertex b = {
+                .x = 700,
+                .y = 100,
+                .r = 0,
+                .g = 255,
+                .b = 0 
+        };
+
+        Vertex c = {
+                .x = 1000,
+                .y = 500,
+                .r = 255,
+                .g = 0,
+                .b = 0 
+        };
 
         while (is_running) {
-                clear_pixel_buffer(pixelbuf, surface_fmt, 255, 0, 0);
+                clear_pixel_buffer(&ctx, 100, 100, 100);
 
-                putpixel(pixelbuf, surface_fmt, 400, 300, 255, 255, 255);
-                draw_pixel_buffer(surface, pixelbuf);
+                draw_triangle(&ctx, a, b, c);
+                draw_pixel_buffer(&ctx);
 
                 SDL_UpdateWindowSurface(window);
 
